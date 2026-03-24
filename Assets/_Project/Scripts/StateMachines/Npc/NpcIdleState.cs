@@ -8,13 +8,13 @@ public class NpcIdleState : NpcBaseState
 
     public override void Enter()
     {
-        stateMachine.AnimationController.PlayIdleWalkRunAnimation();
+        stateMachine.AnimationController.PlayLocomotionAnimation();
         stateMachine.MovementController.Stop();
     }
 
     public override void Tick(float deltaTime)
     {
-        stateMachine.AnimationController.UpdateIdleWalkRunRatio(0f, deltaTime);
+        stateMachine.AnimationController.UpdateLocomotionRatio(0f, deltaTime);
     }
 
     public override void Exit()

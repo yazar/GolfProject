@@ -16,21 +16,19 @@ public class AnimationController : MonoBehaviour
     private const float AnimatorDampTime = 0.1f;
 
 
-    public void PlayIdleWalkRunAnimation()
+    public void PlayLocomotionAnimation()
     {
         animator.SetTrigger(LocomotionTriggerKey);
     }
     
-    public void UpdateIdleWalkRunRatio(float ratio, float deltaTime, bool skipDampTime = false)
+    public void UpdateLocomotionRatio(float ratio, float deltaTime)
     {
-        if (skipDampTime)
-        {
-            animator.SetFloat(LocomotionKeyRatioKey, ratio);
-        }
-        else
-        {
-            animator.SetFloat(LocomotionKeyRatioKey, ratio, AnimatorDampTime, deltaTime);
-        }
+        animator.SetFloat(LocomotionKeyRatioKey, ratio, AnimatorDampTime, deltaTime);
+    }
+    
+    public void UpdateLocomotionRatio(float ratio)
+    {
+        animator.SetFloat(LocomotionKeyRatioKey, ratio);
     }
     
     public void PlayPickUpAnimation()

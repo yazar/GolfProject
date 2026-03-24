@@ -8,7 +8,7 @@ public class NpcMovingState : NpcBaseState
 
     public override void Enter()
     {
-        stateMachine.AnimationController.PlayIdleWalkRunAnimation();
+        stateMachine.AnimationController.PlayLocomotionAnimation();
 
         stateMachine.MovementController.Move(stateMachine.PathPositions[0]);
     }
@@ -17,21 +17,12 @@ public class NpcMovingState : NpcBaseState
     {
         if (stateMachine.MovementController.GetRemainingDistance() < 0.6f)
         {
-            stateMachine.PathPositions.RemoveAt(0);
             stateMachine.MovementController.Stop();
-            
-            if(stateMachine.PathPositions.Count > 0)
-            {
-                stateMachine.SwitchState(new NpcCollectState(stateMachine));
-            }
-            else
-            {
-                stateMachine.SwitchState(new NpcIdleState(stateMachine));
-            }            
+            stateMachine.ReachedNextPosition();
             return;
         }
         
-        stateMachine.AnimationController.UpdateIdleWalkRunRatio(1f, deltaTime);
+        stateMachine.AnimationController.UpdateLocomotionRatio(1f, deltaTime);
     }
 
     public override void Exit()

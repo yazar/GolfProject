@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NpcCollectState : NpcBaseState
+public class NpcDropBallsState : NpcBaseState
 {
-    public NpcCollectState(NpcStateMachine stateMachine) : base(stateMachine) { }
-
-    private float _startTime;
+    public NpcDropBallsState(NpcStateMachine stateMachine) : base(stateMachine) { }
     
+    private float _startTime;
+
     public override void Enter()
     {
         _startTime = Time.time;
@@ -19,9 +19,9 @@ public class NpcCollectState : NpcBaseState
     {
         stateMachine.AnimationController.UpdateLocomotionRatio(0f, Time.deltaTime);
 
-        if (Time.time - _startTime > stateMachine.NpcSettings.pickUpDuration)
+        if (Time.time - _startTime > stateMachine.NpcSettings.dropOffDuration)
         {
-            stateMachine.SwitchState(new NpcMovingState(stateMachine));
+            stateMachine.DroppedBalls();
         }
     }
 

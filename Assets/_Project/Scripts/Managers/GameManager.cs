@@ -6,8 +6,53 @@ using UnityEngine;
 [DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
 {
+    private GameStates _currentGameState;
+    
+    public Action OnPlay;
     public Action OnReset;
-    public Action<List<Transform>> OnBallsScattered;
+    public Action OnDeath;
+    public Action OnCompleted;
+    public Action OnWaitingForPlay;
+    public Action<List<GolfBall>> OnBallsScattered;
+
+
+    public void SwitchGameState(GameStates targetState)
+    {
+        if (_currentGameState == targetState)
+        {
+            Debug.LogWarning("Trying to enter the same state. Already in state : " + targetState);
+            return;
+        }
+        
+        switch (targetState)
+        {
+            case GameStates.WaitingForPlay:
+                _currentGameState = targetState;
+                OnWaitingForPlay?.Invoke();
+                break;
+            case GameStates.Playing:
+                if(_currentGameState != GameStates.WaitingForPlay)
+                {
+                    break;
+                }
+                _currentGameState = targetState;
+                OnPlay?.Invoke();
+                break;
+            case GameStates.Death:
+                _currentGameState = targetState;
+                OnDeath?.Invoke();
+                break;
+            case GameStates.Resetting:
+                _currentGameState = targetState;
+                OnReset?.Invoke();
+                break;
+            case GameStates.Completed:
+                _currentGameState = targetState;
+                OnCompleted?.Invoke();
+                break;
+        }
+        
+    }
     
 
     #region Singleton
@@ -26,4 +71,14 @@ public class GameManager : MonoBehaviour
 
     #endregion
     
+}
+
+public enum GameStates
+{
+    None,
+    WaitingForPlay,
+    Playing,
+    Death,
+    Resetting,
+    Completed,
 }
