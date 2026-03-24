@@ -9,9 +9,11 @@ public class NpcStateMachine : StateMachine
     [field: SerializeField] public AnimationController AnimationController { get; private set; }
 
     private List<Transform> _golfBalls = new List<Transform>();
+    private List<Vector3> _pathPositions = new List<Vector3>();
     public List<Transform> GolfBalls => _golfBalls;
+    public List<Vector3> PathPositions => _pathPositions;
     
-    private void Start()
+    private void Awake()
     {
         transform.position = StartPoint.position;
         SwitchState(new NpcIdleState(this));
@@ -35,10 +37,11 @@ public class NpcStateMachine : StateMachine
         SwitchState(new NpcIdleState(this));
     }
     
-    private void HandleBallsScattered(List<Transform> balls)
+    private void HandleBallsScattered(List<Transform> golfBalls)
     {
-        _golfBalls = balls;
         
+        _golfBalls = golfBalls;
+        _pathPositions = PathCalculator.CalculatedPath(StartPoint, _golfBalls);
         SwitchState(new NpcMovingState(this));
     }
 

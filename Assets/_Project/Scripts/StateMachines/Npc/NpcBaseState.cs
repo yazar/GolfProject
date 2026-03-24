@@ -9,9 +9,4 @@ public abstract class NpcBaseState : State
     {
         this.stateMachine = stateMachine;
     }
-    
-    protected void SetTargetMovePosition(Vector3 position)
-    {
-        stateMachine.MovementController.Move(position);
-    }
 }

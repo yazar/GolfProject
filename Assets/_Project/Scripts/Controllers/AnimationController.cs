@@ -7,19 +7,34 @@ public class AnimationController : MonoBehaviour
     [SerializeField] private Animator animator;
     
     
-    static readonly int IdleWalkRunKey = Animator.StringToHash("IdleWalkRun");
-    static readonly int IdleWalkRunRatioKey = Animator.StringToHash("IdleWalkRunRatio");
+    static readonly int LocomotionTriggerKey = Animator.StringToHash("Locomotion");
+    static readonly int LocomotionKeyRatioKey = Animator.StringToHash("LocomotionRatio");
+    
+    static readonly int PickUpTriggerKey = Animator.StringToHash("PickUp");
+
 
     private const float AnimatorDampTime = 0.1f;
 
 
     public void PlayIdleWalkRunAnimation()
     {
-        //animator.SetTrigger(IdleWalkRunKey);
+        animator.SetTrigger(LocomotionTriggerKey);
     }
     
-    public void UpdateIdleWalkRunRatio(float ratio, float deltaTime)
+    public void UpdateIdleWalkRunRatio(float ratio, float deltaTime, bool skipDampTime = false)
     {
-        //animator.SetFloat(IdleWalkRunRatioKey, ratio, AnimatorDampTime, deltaTime);
+        if (skipDampTime)
+        {
+            animator.SetFloat(LocomotionKeyRatioKey, ratio);
+        }
+        else
+        {
+            animator.SetFloat(LocomotionKeyRatioKey, ratio, AnimatorDampTime, deltaTime);
+        }
+    }
+    
+    public void PlayPickUpAnimation()
+    {
+        animator.SetTrigger(PickUpTriggerKey);
     }
 }

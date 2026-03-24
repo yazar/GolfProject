@@ -16,13 +16,16 @@ public class NpcCollectState : NpcBaseState
             return;
         }
         
-        stateMachine.GolfBalls.RemoveAt(0);
         _startTime = Time.time;
+
+        stateMachine.AnimationController.PlayPickUpAnimation();
     }
 
     public override void Tick(float deltaTime)
     {
-        if (Time.time - _startTime > 0.5f)
+        stateMachine.AnimationController.UpdateIdleWalkRunRatio(0f, Time.deltaTime);
+
+        if (Time.time - _startTime > 2f)
         {
             stateMachine.SwitchState(new NpcMovingState(stateMachine));
         }

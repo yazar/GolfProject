@@ -11,8 +11,13 @@ public class MovementController : MonoBehaviour
         navMeshAgent.SetDestination(targetPosition);
     }
 
-    public bool IsInCollectRange()
+    public void Stop()
     {
-        return navMeshAgent.remainingDistance <= 0.1f;
+        navMeshAgent.SetDestination(transform.position);
+    }
+
+    public float GetRemainingDistance()
+    {
+        return navMeshAgent.remainingDistance;
     }
 }
