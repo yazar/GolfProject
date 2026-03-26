@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class PathCalculator
-{
+{ 
     // Route data for path calculations to pass between functions
     private struct RouteContext
     {
@@ -91,7 +91,7 @@ public static class PathCalculator
  
                 if (healthLeft - costToGet - returnCost < 0f)
                     continue;
- 
+                
                 float score = routeContext.allBalls[i].GetBallPoints() / Mathf.Max(costToGet, 0.001f);
  
                 if (score > bestScore)
@@ -132,9 +132,6 @@ public static class PathCalculator
             {
                 while (route.Count > 0 && route[^1] != -1)
                     route.RemoveAt(route.Count - 1);
- 
-                if (route.Count > 0 && route[^1] != -1)
-                    route.Add(-1);
             }
         }
  
@@ -157,6 +154,9 @@ public static class PathCalculator
             iteration++;
         }
  
+        // Final pass: optimize order for shortest time (same points, less health used)
+        TryReorder(ref route, ref ctx);
+ 
         return route;
     }
  
@@ -168,14 +168,14 @@ public static class PathCalculator
         {
             if (route[i] == -1) continue;
  
-            for (int b = 0; b < ctx.allBalls.Count; b++)
+            for (int k = 0; k < ctx.allBalls.Count; k++)
             {
-                if (IsBallInRoute(route, b)) continue;
-                if (ctx.allBalls[b].GetBallPoints() <= ctx.allBalls[route[i]].GetBallPoints())
+                if (route.Contains(k)) continue;
+                if (ctx.allBalls[k].GetBallPoints() <= ctx.allBalls[route[i]].GetBallPoints())
                     continue;
  
                 int old = route[i];
-                route[i] = b;
+                route[i] = k;
  
                 if (IsValid(route, ref ctx))
                 {
@@ -195,17 +195,17 @@ public static class PathCalculator
     {
         float bestPoints = CalculatePoints(route, ctx.allBalls);
  
-        for (int b = 0; b < ctx.allBalls.Count; b++)
+        for (int k = 0; k < ctx.allBalls.Count; k++)
         {
-            if (IsBallInRoute(route, b)) continue;
-            if (ctx.allBalls[b].GetBallPoints() <= 0f) continue;
+            if (route.Contains(k)) continue;
+            if (ctx.allBalls[k].GetBallPoints() <= 0f) continue;
  
             // Try inserting within existing trips
             for (int pos = 0; pos < route.Count; pos++)
             {
                 if (GetCarryCountAt(route, pos) >= ctx.maxCarry) continue;
  
-                route.Insert(pos, b);
+                route.Insert(pos, k);
  
                 if (IsValid(route, ref ctx))
                 {
@@ -218,7 +218,7 @@ public static class PathCalculator
             }
  
             // Try creating a new trip at the end: [existing..., ball, -1]
-            route.Add(b);
+            route.Add(k);
             route.Add(-1);
  
             if (IsValid(route, ref ctx))
@@ -234,8 +234,51 @@ public static class PathCalculator
  
         return false;
     }
+ 
+    // swap pairs of balls within each trip to minimize travel time.
+    private static void TryReorder(ref List<int> route, ref RouteContext ctx)
+    {
+        bool improved = true;
+ 
+        while (improved)
+        {
+            improved = false;
+ 
+            for (int i = 0; i < route.Count; i++)
+            {
+                if (route[i] == -1) continue;
+ 
+                for (int k = i + 1; k < route.Count; k++)
+                {
+                    if (route[k] == -1) continue;
+ 
+                    float oldTime = CalculateRouteTime(route, ref ctx);
+ 
+                    // Swap
+                    int temp = route[i];
+                    route[i] = route[k];
+                    route[k] = temp;
+ 
+                    if (IsValid(route, ref ctx))
+                    {
+                        float newTime = CalculateRouteTime(route, ref ctx);
+                        if (newTime < oldTime)
+                        {
+                            improved = true;
+                            continue; // Keep the swap
+                        }
+                    }
+ 
+                    // Revert swap
+                    temp = route[i];
+                    route[i] = route[k];
+                    route[k] = temp;
+                }
+            }
+        }
+    }
     
-    /// Calculates travel time accounting for acceleration from 0 to max speed.
+    // Calculates travel time accounting for acceleration from 0 to max speed.
     private static float CalculateTravelTime(float distance, float maxSpeed, float acceleration)
     {
         if (distance <= 0f) return 0f;
@@ -265,16 +308,36 @@ public static class PathCalculator
         return (fromPos == -1) ? ctx.timeToStart[toBallIndex] : ctx.timeBetween[fromPos, toBallIndex];
     }
  
+    /// Calculates total time cost of a route (travel + pickups + dropoffs).
+    private static float CalculateRouteTime(List<int> route, ref RouteContext ctx)
+    {
+        float time = 0f;
+        int prev = -1;
+ 
+        for (int i = 0; i < route.Count; i++)
+        {
+            int cur = route[i];
+ 
+            if (cur == -1)
+            {
+                time += ((prev == -1) ? 0f : ctx.timeToStart[prev]) + ctx.dropOffDuration;
+            }
+            else
+            {
+                time += GetTravelTime(prev, cur, ref ctx) + ctx.pickUpDuration;
+            }
+ 
+            prev = (cur == -1) ? -1 : cur;
+        }
+ 
+        return time;
+    }
+ 
     private static bool IsValid(List<int> route, ref RouteContext ctx)
     {
         if (route.Count == 0) return true;
- 
-        bool hasBalls = false;
-        for (int i = 0; i < route.Count; i++)
-            if (route[i] != -1) { hasBalls = true; break; }
- 
-        if (hasBalls && route[route.Count - 1] != -1)
-            return false;
+        
+        if (route[^1] != -1) return false;
  
         float health = ctx.totalHealth;
         int prev = -1;
@@ -282,9 +345,9 @@ public static class PathCalculator
  
         for (int i = 0; i < route.Count; i++)
         {
-            int cur = route[i];
+            int current = route[i];
  
-            if (cur == -1)
+            if (current == -1)
             {
                 if (carrying == 0) return false;
                 health -= ((prev == -1) ? 0f : ctx.timeToStart[prev]) + ctx.dropOffDuration;
@@ -293,13 +356,13 @@ public static class PathCalculator
             else
             {
                 if (carrying >= ctx.maxCarry) return false;
-                health -= GetTravelTime(prev, cur, ref ctx);
+                health -= GetTravelTime(prev, current, ref ctx);
                 health -= ctx.pickUpDuration;
                 carrying++;
             }
  
             if (health < 0f) return false;
-            prev = (cur == -1) ? -1 : cur;
+            prev = (current == -1) ? -1 : current;
         }
  
         return true;
@@ -308,29 +371,16 @@ public static class PathCalculator
     private static float CalculatePoints(List<int> route, List<GolfBall> allBalls)
     {
         float total = 0f;
-        float batch = 0f;
- 
+
         for (int i = 0; i < route.Count; i++)
         {
-            if (route[i] == -1)
+            if (route[i] != -1)
             {
-                total += batch;
-                batch = 0f;
-            }
-            else
-            {
-                batch += allBalls[route[i]].GetBallPoints();
+                total += allBalls[route[i]].GetBallPoints();
             }
         }
  
         return total;
-    }
- 
-    private static bool IsBallInRoute(List<int> route, int ballIndex)
-    {
-        for (int i = 0; i < route.Count; i++)
-            if (route[i] == ballIndex) return true;
-        return false;
     }
  
     private static int GetCarryCountAt(List<int> route, int position)

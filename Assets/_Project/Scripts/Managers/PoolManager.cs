@@ -5,11 +5,8 @@ using UnityEngine;
 public class PoolManager : MonoBehaviour
 {
     [SerializeField] private GolfBall golfBallPrefab;
-
-    void Start()
-    {
-        Register(golfBallPrefab, prewarm: 5, maxSize: 500, expandable: true);
-    }
+    [SerializeField] private BallInfo ballInfoPrefab;
+    [SerializeField] private LineRenderer lineRendererPrefab;
 
     public static PoolManager Instance { get; private set; }
 
@@ -27,6 +24,10 @@ public class PoolManager : MonoBehaviour
 
         _root = new GameObject("Pools").transform;
         _root.SetParent(transform, false);
+        
+        Register(golfBallPrefab, prewarm: 5, maxSize: 1000, expandable: true);
+        Register(ballInfoPrefab, prewarm: 5, maxSize: 1000, expandable: true);
+        Register(lineRendererPrefab, prewarm: 5, maxSize: 5000, expandable: true);
     }
 
     public void Register<T>(T prefab, int prewarm = 0, int maxSize = int.MaxValue, bool expandable = true)

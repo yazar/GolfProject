@@ -17,5 +17,11 @@ public class NpcSettings : ScriptableObject
 
     [Header("General Settings")] 
     public int maxBallsToCarry = 5;
+    
+    [Header("Path Visualization Settings")] 
+    public bool showVisualizationOnStart = true;
+    public bool updateLineRenderers = true;
+    public PathVisualizationSettings settingsOnTps;
+    public PathVisualizationSettings settingsOnTopdown;
 
 }

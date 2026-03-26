@@ -12,6 +12,7 @@ Material:
   m_ValidKeywords:
   - _USEDFORTRUNK_ON
   m_InvalidKeywords:
+  - _ALPHATEST_ON
   - _TRUNKMATERIAL_ON
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 1
@@ -141,7 +142,7 @@ Material:
     - _ada: 1
     - _add: 1
     m_Colors:
-    - _ColorTint: {r: 1, g: 1, b: 1, a: 0}
+    - _ColorTint: {r: 0.916, g: 0.916, b: 0.916, a: 0}
     - _Direction: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}

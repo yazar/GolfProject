@@ -13,6 +13,9 @@ public class NpcStateMachine : StateMachine
     [field: SerializeField] public MovementController MovementController { get; private set; }
     [field: SerializeField] public AnimationController AnimationController { get; private set; }
     
+    [field: Header("Tools")]
+    [SerializeField] private PathVisualizer pathVisualizer;
+    
 
     private List<GolfBall> _targetGolfBalls = new List<GolfBall>();
     private List<Vector3> _pathPositions = new List<Vector3>();
@@ -56,12 +59,15 @@ public class NpcStateMachine : StateMachine
     private void HandleReset()
     {
         transform.position = StartPoint.position;
+        transform.rotation = Quaternion.identity;
         SwitchState(new NpcIdleState(this));
     }
     
     private void HandleBallsScattered(List<GolfBall> golfBalls)
     {
         (_pathPositions, _targetGolfBalls) = PathCalculator.CalculatedPath(StartPoint, golfBalls, NpcSettings);
+        
+        pathVisualizer.Visualize(StartPoint.position, _pathPositions, _targetGolfBalls);
     }
     
     private void HandleLose()
@@ -100,8 +106,6 @@ public class NpcStateMachine : StateMachine
         }
         else
         {
-            _pointsOfBallsOnNpc += _targetGolfBalls[0].GetBallPoints();
-            _targetGolfBalls.RemoveAt(0);
             SwitchState(new NpcCollectState(this));
         }
     }
@@ -120,6 +124,14 @@ public class NpcStateMachine : StateMachine
         {
             SwitchState(new NpcMovingState(this));
         }
+    }
+    
+    public void CollectedBall()
+    {
+        _pointsOfBallsOnNpc += _targetGolfBalls[0].GetBallPoints();
+        
+        PoolManager.Instance.ReturnToPool(_targetGolfBalls[0]);
+        _targetGolfBalls.RemoveAt(0);
     }
     
     #endregion PublicFunctions

@@ -20,6 +20,9 @@ public class GolfBallManager : MonoBehaviour
 
     private void Start()
     {
+        if(!useTestList)
+            ReturnBallsToPool();
+        
         ScatterGolfBalls();
     }
 

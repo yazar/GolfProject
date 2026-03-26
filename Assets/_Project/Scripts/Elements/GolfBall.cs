@@ -1,19 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GolfBall : MonoBehaviour, IPoolable
 {
-    [SerializeField] private BallSetting _ballSettings;
+    [FormerlySerializedAs("_ballSettings")] [SerializeField] private BallSetting ballSettings;
     
-    public void SetBallSetting(BallSetting ballSettings)
+    public void SetBallSetting(BallSetting settings)
     {
-        _ballSettings = ballSettings;
+        ballSettings = settings;
     }
-
+    
     public float GetBallPoints()
     {
-        return _ballSettings.points;
+        return ballSettings.points;
+    }
+    
+    public int GetBallLevel()
+    {
+        return ballSettings.ballLevel;
     }
 
     #region PoolingFunctions

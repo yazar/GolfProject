@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     public Action OnLose;
     public Action OnRouteCompleted;
     public Action OnWaitingForPlay;
+    public Action OnTogglePathVisualization;
+    public Action OnCameraToggle;
+    public Action<CameraType> OnCameraChange;
     public Action<List<GolfBall>> OnBallsScattered;
 
 

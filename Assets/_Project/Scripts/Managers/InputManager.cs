@@ -16,5 +16,15 @@ public class InputManager : MonoBehaviour
         {
             GameManager.Instance.SwitchGameState(GameStates.Playing);
         }
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GameManager.Instance.OnCameraToggle?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            GameManager.Instance.OnTogglePathVisualization?.Invoke();
+        }
     }
 }
