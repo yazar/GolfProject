@@ -6,14 +6,16 @@ using UnityEngine;
 public class NpcSettings : ScriptableObject
 {
     [Header("Movement Settings")]
-    public float speed;
-    public float pickUpDuration;
-    public float dropOffDuration;
+    public float speed = 5f;
+    public float acceleration = 8f;
+    public float pickUpDuration = 2f;
+    public float dropOffDuration = 2f;
+    public float stoppingDistance = 0.5f;
     
     [Header("Health Settings")]
-    public float healthDuration;
+    public float healthDuration = 30f;
 
     [Header("General Settings")] 
-    public int maxBallsToCarry;
+    public int maxBallsToCarry = 5;
 
 }

@@ -11,6 +11,9 @@ public class AnimationController : MonoBehaviour
     static readonly int LocomotionKeyRatioKey = Animator.StringToHash("LocomotionRatio");
     
     static readonly int PickUpTriggerKey = Animator.StringToHash("PickUp");
+    static readonly int DropTriggerKey = Animator.StringToHash("Drop");
+    static readonly int LoseTriggerKey = Animator.StringToHash("Lose");
+    static readonly int VictoryTriggerKey = Animator.StringToHash("Victory");
 
 
     private const float AnimatorDampTime = 0.1f;
@@ -34,5 +37,20 @@ public class AnimationController : MonoBehaviour
     public void PlayPickUpAnimation()
     {
         animator.SetTrigger(PickUpTriggerKey);
+    }
+    
+    public void PlayDropAnimation()
+    {
+        animator.SetTrigger(DropTriggerKey);
+    }
+    
+    public void PlayLoseAnimation()
+    {
+        animator.SetTrigger(LoseTriggerKey);
+    }
+    
+    public void PlayVictoryAnimation()
+    {
+        animator.SetTrigger(VictoryTriggerKey);
     }
 }

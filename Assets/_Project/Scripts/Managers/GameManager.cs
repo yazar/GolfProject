@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
     
     public Action OnPlay;
     public Action OnReset;
-    public Action OnDeath;
-    public Action OnCompleted;
+    public Action OnLose;
+    public Action OnRouteCompleted;
     public Action OnWaitingForPlay;
     public Action<List<GolfBall>> OnBallsScattered;
 
@@ -38,9 +38,9 @@ public class GameManager : MonoBehaviour
                 _currentGameState = targetState;
                 OnPlay?.Invoke();
                 break;
-            case GameStates.Death:
+            case GameStates.Lose:
                 _currentGameState = targetState;
-                OnDeath?.Invoke();
+                OnLose?.Invoke();
                 break;
             case GameStates.Resetting:
                 _currentGameState = targetState;
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
                 break;
             case GameStates.Completed:
                 _currentGameState = targetState;
-                OnCompleted?.Invoke();
+                OnRouteCompleted?.Invoke();
                 break;
         }
         
@@ -78,7 +78,7 @@ public enum GameStates
     None,
     WaitingForPlay,
     Playing,
-    Death,
+    Lose,
     Resetting,
     Completed,
 }

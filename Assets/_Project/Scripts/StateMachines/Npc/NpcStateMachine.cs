@@ -14,8 +14,9 @@ public class NpcStateMachine : StateMachine
     [field: SerializeField] public AnimationController AnimationController { get; private set; }
     
 
-    public List<GolfBall> _targetGolfBalls = new List<GolfBall>();
-    public List<Vector3> _pathPositions = new List<Vector3>();
+    private List<GolfBall> _targetGolfBalls = new List<GolfBall>();
+    private List<Vector3> _pathPositions = new List<Vector3>();
+    
     private float _totalPoints = 0;
     private float _pointsOfBallsOnNpc = 0;
     
@@ -30,6 +31,8 @@ public class NpcStateMachine : StateMachine
         GameManager.Instance.OnPlay += HandlePlay;
         GameManager.Instance.OnReset += HandleReset;
         GameManager.Instance.OnBallsScattered += HandleBallsScattered;
+        GameManager.Instance.OnLose += HandleLose;
+        GameManager.Instance.OnRouteCompleted += HandleRouteCompleted;
     }
 
     private void OnDisable()
@@ -37,6 +40,7 @@ public class NpcStateMachine : StateMachine
         GameManager.Instance.OnPlay -= HandlePlay;
         GameManager.Instance.OnReset -= HandleReset;
         GameManager.Instance.OnBallsScattered -= HandleBallsScattered;
+        GameManager.Instance.OnLose -= HandleLose;
     }
     
     private void HandlePlay()
@@ -52,13 +56,21 @@ public class NpcStateMachine : StateMachine
     private void HandleReset()
     {
         transform.position = StartPoint.position;
-        AnimationController.UpdateLocomotionRatio(0f);
         SwitchState(new NpcIdleState(this));
     }
     
     private void HandleBallsScattered(List<GolfBall> golfBalls)
     {
         (_pathPositions, _targetGolfBalls) = PathCalculator.CalculatedPath(StartPoint, golfBalls, NpcSettings);
+    }
+    
+    private void HandleLose()
+    {
+        SwitchState(new NpcLoseState(this));
+    }
+    private void HandleRouteCompleted()
+    {
+        SwitchState(new NpcVictoryState(this));
     }
 
     #region PublicAccessors

@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   speed: 5
+  acceleration: 8
   pickUpDuration: 2
   dropOffDuration: 2
-  healthDuration: 20
-  maxBallsToCarry: 5
+  stoppingDistance: 0.5
+  healthDuration: 25.5
+  maxBallsToCarry: 100

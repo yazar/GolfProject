@@ -8,6 +8,13 @@ public class NpcMovingState : NpcBaseState
 
     public override void Enter()
     {
+        if (stateMachine.PathPositions.Count == 0)
+        {
+            Debug.LogWarning("Entered Moving State Without Any Path Positions. Exiting to Idle");
+            stateMachine.SwitchState(new NpcIdleState(stateMachine));
+            return;
+        }
+        
         stateMachine.AnimationController.PlayLocomotionAnimation();
 
         stateMachine.MovementController.Move(stateMachine.PathPositions[0]);
@@ -15,18 +22,15 @@ public class NpcMovingState : NpcBaseState
 
     public override void Tick(float deltaTime)
     {
-        if (stateMachine.MovementController.GetRemainingDistance() < 0.6f)
+        if (stateMachine.MovementController.GetRemainingDistance() < stateMachine.NpcSettings.stoppingDistance)
         {
-            stateMachine.MovementController.Stop();
             stateMachine.ReachedNextPosition();
             return;
         }
-        
-        stateMachine.AnimationController.UpdateLocomotionRatio(1f, deltaTime);
     }
 
     public override void Exit()
     {
-        
+        stateMachine.MovementController.Stop();
     }
 }

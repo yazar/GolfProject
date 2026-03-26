@@ -6,20 +6,18 @@ public class NpcCollectState : NpcBaseState
 {
     public NpcCollectState(NpcStateMachine stateMachine) : base(stateMachine) { }
 
-    private float _startTime;
+    private float _enterTime;
     
     public override void Enter()
     {
-        _startTime = Time.time;
+        _enterTime = Time.time;
 
         stateMachine.AnimationController.PlayPickUpAnimation();
     }
 
     public override void Tick(float deltaTime)
     {
-        stateMachine.AnimationController.UpdateLocomotionRatio(0f, Time.deltaTime);
-
-        if (Time.time - _startTime > stateMachine.NpcSettings.pickUpDuration)
+        if (Time.time - _enterTime > stateMachine.NpcSettings.pickUpDuration)
         {
             stateMachine.SwitchState(new NpcMovingState(stateMachine));
         }

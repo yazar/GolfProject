@@ -13,7 +13,6 @@ public class GolfBallManager : MonoBehaviour
     
     [SerializeField] private Terrain terrain;
     [SerializeField] private Transform startPoint;
-    [SerializeField] private NavMeshData navMeshData;
 
     public bool useTestList;
     
