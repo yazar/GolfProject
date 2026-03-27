@@ -1,7 +1,5 @@
 # Golf Course NPC Ball Collector
 
-Unity 3D Developer Demo Task
-
 ## 1. Game Mechanics
 
 The game features an NPC character that must collect golf balls scattered across the environment randomly and deliver them to a starting point to earn points. We can observe the pattern of the NPC and adjust some settings like the amount of time it has to collect balls, the number of balls it can carry on itself before delivering them etc.
