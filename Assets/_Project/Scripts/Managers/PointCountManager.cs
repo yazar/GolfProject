@@ -12,15 +12,18 @@ public class PointCountManager : MonoBehaviour
     {
         GameManager.Instance.OnCollectedBall += HandleOnBallCollected;
         GameManager.Instance.OnBallsDropped += HandleBallsDropped;
+        GameManager.Instance.OnReset += HandleOnReset;
+
     }
 
     private void OnDisable()
     {
         GameManager.Instance.OnCollectedBall -= HandleOnBallCollected;
         GameManager.Instance.OnBallsDropped -= HandleBallsDropped;
+        GameManager.Instance.OnReset -= HandleOnReset;
     }
 
-    public void HandleBallsDropped()
+    private void HandleBallsDropped()
     {
         _points += _pointsInCarry;
         _pointsInCarry = 0f;
@@ -28,9 +31,17 @@ public class PointCountManager : MonoBehaviour
         GameManager.Instance.PointsWaitingUI.SetPointCountText(_pointsInCarry);
     }
     
-    public void HandleOnBallCollected(float points)
+    private void HandleOnBallCollected(float points)
     {
         _pointsInCarry += points;
+        GameManager.Instance.PointsWaitingUI.SetPointCountText(_pointsInCarry);
+    }
+    
+    private void HandleOnReset()
+    {
+        _points = 0;
+        _pointsInCarry = 0;
+        GameManager.Instance.PointsUI.SetPointCountText(_points);
         GameManager.Instance.PointsWaitingUI.SetPointCountText(_pointsInCarry);
     }
 }
