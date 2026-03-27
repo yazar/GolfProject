@@ -30,7 +30,7 @@ public class PathVisualizer : MonoBehaviour
     {
         ClearVisualization();
 
-        if (!_isVisible || path == null || path.Count == 0)
+        if (path == null || path.Count == 0)
             return;
 
         // Split into trips and draw lines
