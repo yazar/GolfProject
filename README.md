@@ -89,4 +89,5 @@ A `RouteContext` struct holds all per calculation data: pre computed travel time
 
 Each `CalculatedPath` call creates its own context with no shared static state. This is added so if we want to add multiple NPCs in the future they can calculate paths simultaneously without data interference, making the system thread safe.
 
-Build Link : https://drive.google.com/drive/folders/1cqYWNMwfabgl4AKPXckIccoRRo9TTr9w?usp=sharing
+**Build Link :** https://drive.google.com/drive/folders/1cqYWNMwfabgl4AKPXckIccoRRo9TTr9w?usp=sharing
+**Short Gameplay Video :** https://drive.google.com/file/d/11YJ5zhzR_IivfaMjEDsnZ_1cTL5XC6qG/view?usp=sharing
