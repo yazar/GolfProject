@@ -17,9 +17,9 @@ MonoBehaviour:
   pickUpDuration: 2
   dropOffDuration: 2
   stoppingDistance: 0.5
-  healthDuration: 6000
-  maxBallsToCarry: 100
-  showVisualizationOnStart: 1
+  healthDuration: 300
+  maxBallsToCarry: 50
+  showVisualizationOnStart: 0
   updateLineRenderers: 1
   settingsOnTps: {fileID: 11400000, guid: 97cfdfaa452bee542a88586bfc2684ed, type: 2}
   settingsOnTopdown: {fileID: 11400000, guid: 1c0ef4696c85b2b4082c364b7110632b, type: 2}

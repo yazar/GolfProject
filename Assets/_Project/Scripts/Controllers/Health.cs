@@ -6,16 +6,15 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] private NpcSettings npcSettings;
-    [SerializeField] private HealhUI healhUI;
     
-    public float _health;
+    private float _health;
     
     private bool _isPlaying;
 
     private void Start()
     {
         HandleReset();
-        healhUI.SetFillAmount(1f);
+        GameManager.Instance.HealthBarUI.SetFillAmount(1f);
     }
     
     private void Update()
@@ -23,8 +22,10 @@ public class Health : MonoBehaviour
         if(!_isPlaying) return;
         
         _health -= Time.deltaTime;
-        
-        healhUI.SetFillAmount(Mathf.Max(0f, _health / npcSettings.healthDuration));
+
+        float ratio = Mathf.Max(0f, _health / npcSettings.healthDuration);
+        GameManager.Instance.HealthBarUI.SetFillAmount(ratio);
+
 
         if (_health <= 0f)
         {
@@ -38,7 +39,7 @@ public class Health : MonoBehaviour
     {
         _isPlaying = false;
         _health =  npcSettings.healthDuration;
-        healhUI.SetFillAmount(1f);
+        GameManager.Instance.HealthBarUI.SetFillAmount(1f);
     }
     
     private void HandlePlay()
@@ -55,7 +56,7 @@ public class Health : MonoBehaviour
     {
         _isPlaying = false;
         _health =  npcSettings.healthDuration;
-        healhUI.SetFillAmount(1f);
+        GameManager.Instance.HealthBarUI.SetFillAmount(1f);
     }
 
     private void OnEnable()

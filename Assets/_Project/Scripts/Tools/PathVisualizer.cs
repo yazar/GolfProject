@@ -16,6 +16,7 @@ public class PathVisualizer : MonoBehaviour
     private void Awake()
     {
         _isVisible = npcSettings.showVisualizationOnStart;
+        visualizationParent.gameObject.SetActive(_isVisible);
         _currentPathSettings = npcSettings.settingsOnTps;
     }
 

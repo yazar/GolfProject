@@ -6,6 +6,13 @@ using UnityEngine;
 [DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
 {
+    [field: SerializeField] public HealthBarUI HealthBarUI { get; private set; }
+    [field: SerializeField] public PointsUI PointsUI { get; private set; }
+    [field: SerializeField] public PointsUI PointsWaitingUI { get; private set; }
+    [field: SerializeField] public SettingsMenuUI SettingsMenuUI { get; private set; }
+    [field: SerializeField] public EscapeMenuUI EscapeMenuUI { get; private set; }
+    [field: SerializeField] public AudioManager AudioManager { get; private set; }
+    
     private GameStates _currentGameState;
     
     public Action OnPlay;
@@ -17,6 +24,9 @@ public class GameManager : MonoBehaviour
     public Action OnCameraToggle;
     public Action<CameraType> OnCameraChange;
     public Action<List<GolfBall>> OnBallsScattered;
+    public Action<float> OnCollectedBall;
+    public Action OnBallsDropped;
+    public Action OnSoundToggle;
 
 
     public void SwitchGameState(GameStates targetState)

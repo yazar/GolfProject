@@ -20,9 +20,6 @@ public class NpcStateMachine : StateMachine
     private List<GolfBall> _targetGolfBalls = new List<GolfBall>();
     private List<Vector3> _pathPositions = new List<Vector3>();
     
-    private float _totalPoints = 0;
-    private float _pointsOfBallsOnNpc = 0;
-    
     private void Awake()
     {
         transform.position = StartPoint.position;
@@ -112,9 +109,8 @@ public class NpcStateMachine : StateMachine
 
     public void DroppedBalls()
     {
-        _totalPoints += _pointsOfBallsOnNpc;
-        _pointsOfBallsOnNpc = 0f;
-        
+        GameManager.Instance.OnBallsDropped?.Invoke();
+
         if (_pathPositions.Count == 0)
         {
             SwitchState(new NpcIdleState(this));
@@ -128,7 +124,7 @@ public class NpcStateMachine : StateMachine
     
     public void CollectedBall()
     {
-        _pointsOfBallsOnNpc += _targetGolfBalls[0].GetBallPoints();
+        GameManager.Instance.OnCollectedBall?.Invoke(_targetGolfBalls[0].GetBallPoints());
         
         PoolManager.Instance.ReturnToPool(_targetGolfBalls[0]);
         _targetGolfBalls.RemoveAt(0);

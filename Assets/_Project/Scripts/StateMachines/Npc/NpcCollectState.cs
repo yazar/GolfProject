@@ -18,7 +18,7 @@ public class NpcCollectState : NpcBaseState
 
     public override void Tick(float deltaTime)
     {
-        if (!_collectedBall && Time.time - _enterTime > stateMachine.NpcSettings.pickUpDuration / 2f)
+        if (!_collectedBall && Time.time - _enterTime > stateMachine.NpcSettings.pickUpDuration * 0.7f)
         {
             stateMachine.CollectedBall();
             _collectedBall = true;
